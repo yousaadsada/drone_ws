@@ -57,152 +57,32 @@ source devel/setup.bash
 roslaunch my_drone_model tracking_trajectory.launch
 ```
 
-trash:///tracking_trajectory/drone_trajectory_2.0_2.0.png
+<img width="1000" height="1200" alt="drone_trajectory_2 0_2 0" src="https://github.com/user-attachments/assets/1d5d5979-74af-4079-bce4-51a7e3446285" />
 
 
-### Test Anafi Drone System state
+### Pose and velocity estimation by visual detection.
 
-#### Linear MPC
-
-Implementing linear state function for MPC on drone
-
-##### Collect Anafi Drone's Data
 
 ```bash
-ros2 run anafi_test collect_anafi_data_linear_mpc.py
+roslaunch my_drone_model comparison_yolo_gazebo.launch
 ```
-notice:
 
-Enter testing axis after using "key.right" to take off the drone.
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/8e633a12-8e01-416b-b4c3-6bf61c34ce5c" />
 
-Using keyboard for manual control (right, left, w, s, a, d, r, f, c, x) can swith from the tracking mode to manual mode for safety.
+<img width="1000" height="1000" alt="image" src="https://github.com/user-attachments/assets/72d85295-8f63-4473-b171-ba8b25bc192f" />
 
-##### Calculate and test Anafi Drone's System State Matrix
+
+
+
+### Deliver payload on moving vehicle
 
 ```bash
-python3 src/anafi_test/process_data/calculate_state_function_linear_mpc.py
-python3 src/anafi_test/process_data/test_state_function_linear_mpc.py
+roslaunch my_drone_model drop_payload_on_jackal_yolo_auto.launch
 ```
+The gazebo simulation result is shown in the video above
 
-#### Newton-Euler MPC
-
-Implementing reference roll, pitch angles for MPC
-
-##### Collect Anafi Drone's Data
-
-```bash
-ros2 run anafi_test collect_anafi_data_newton_euler_mpc.py
 ```
-notice:
-
-Enter testing axis after using "key.right" to take off the drone.
-
-Using keyboard for manual control (right, left, w, s, a, d, r, f, c, x) can swith from the tracking mode to manual mode for safety.
-
-##### Calculate and test Anafi Drone's System State Matrix
-
-```bash
-python3 src/anafi_test/process_data/calculate_state_function_newton_euler_mpc.py
-python3 src/anafi_test/process_data/test_state_function_newton_euler_mpc.py
 ```
-
-### Move to Reference Point by Linear MPC
-
-```bash
-ros2 run anafi_test move2point_linear_mpc.py
-```
-
-notice:
-
-input four float value: x,y,z,yaw for reference point
-
-Using keyboard for manual control (right, left, w, s, a, d, r, f, c, x) can swith from the MPC mode to manual mode for safety.
-
-### Track the Reference Trajectory by Newton-Euler MPC
-
-```bash
-ros2 run anafi_test move2point_linear_mpc.py
-```
-
-notice:
-
-input eight float value: x,y,z,yaw for initial reference point. x_speed, y_speed, z_speed, yaw_speed for reference point moving speed.
-
-The trajectory is in the shape of the circle. Larger x_speed, y_speed will enhance radius of the circle. The x_speed, y_speed, z_speed and yaw_speed should not exceed 0.3 at the first attempt. User can adjust the trajectory by revising "def update_ref_state_callback" in move2point_linear_mpc.py
-
-Using keyboard for manual control (right, left, w, s, a, d, r, f, c, x) can swith from the MPC mode to manual mode for safety.
-
-### Plot the Drone's Trajectory
-
-```bash
-python3 src/anafi_test/process_data/plot_move2point_linear_mpc.py
-```
-
-![截图 2025-04-13 01-30-42](https://github.com/user-attachments/assets/dcb33b75-d015-4456-92e1-5818815513a1)
-
-```bash
-python3 src/anafi_test/process_data/plot_move2point_newton_euler_mpc.py
-```
-
-![截图 2025-04-13 01-31-59](https://github.com/user-attachments/assets/4f25880c-a23c-4ce9-a39c-221b35ad4e0c)
-
-![截图 2025-04-13 01-32-38](https://github.com/user-attachments/assets/c9bbc890-0368-4e73-b9ac-aac83d7f02eb)
-
-### Collect Parrot Drone's Figures
-
-```bash
-ros2 run track_parrot collect_parrot_fig.py
-```
-### Label 2D Images for YOLO 2D BBox Model Training
-
-```bash
-pip install labelImg
-labelImg
-```
-
-### Collect Parrot Drone's Keypoints for YOLO 3D BBox Model Training
-
-```bash
-ros2 launch get_keypoint_launch.py
-```
-
-### Train and Test YOLO 2D BBox
-
-```bash
-python3 src/track_parrot/train_drone_yolo_2d/train.py
-python3 src/track_parrot/train_drone_yolo_2d/test.py
-```
-![截图 2025-04-13 01-27-50](https://github.com/user-attachments/assets/56b1ee1e-487c-49c7-b488-d9c8e5a932ff)
-
-
-### Train YOLO 3D BBox
-
-```bash
-python3 src/track_parrot/train_drone_yolo_3d/train.py
-python3 src/track_parrot/train_drone_yolo_3d/test.py
-```
-![截图 2025-04-13 01-27-10](https://github.com/user-attachments/assets/ba60f899-9bec-4ac3-b215-59e9054e75d7)
-
-
-### Persue the Target Drone
-
-```bash
-ros2 launch pursuer_launch_yolo.py
-```
-notice:
-
-Click 'Start Tracking' after using "key.right" to take off the drone.
-
-Using keyboard for manual control (right, left, w, s, a, d, r, f, c, x) can swith from the tracking mode to manual mode for safety.
-
-### PLot Tracking Process
-
-```bash
-python3 src/track_parrot/process_data/plot_tracking_data.py
-```
-
-![截图 2025-04-13 01-28-55](https://github.com/user-attachments/assets/d4c14230-8e24-4abe-8dba-c600f4695c7d)
-
 
 ## Contact
 Email: zjiang11@ualberta.ca
