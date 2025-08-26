@@ -1,0 +1,79 @@
+<launch>
+  <!-- Launch Gazebo with an empty world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+    <arg name="physics" value="ode"/>
+    <arg name="extra_gazebo_args" value="--ode_config max_step_size=0.001 real_time_update_rate=1000"/>
+  </include>
+
+  <!-- Load the robot description (URDF) from the xacro file -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find my_drone_model)/urdf/my_drone.xacro"/>
+
+  <!-- Publish the robot state (TF transforms) -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="50.0"/>
+    <param name="robot_description" value="robot_description"/>
+  </node>
+
+  <!-- Spawn the model in Gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model my_drone -x 0.0 -y 0.0 -z 0.1" output="screen">
+    <param name="wait_for_service" value="/gazebo/spawn_urdf_model"/>
+  </node>
+
+  <!-- Load the controllers from controller.yaml -->
+  <rosparam file="$(find my_drone_model)/config/controller.yaml" command="load" ns="/quadrotor"/>
+
+  <!-- Start the controllers with a delay -->
+  <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        ns="/quadrotor"
+        args="joint_state_controller rotor1_velocity_controller rotor2_velocity_controller rotor3_velocity_controller rotor4_velocity_controller">
+    <param name="spawn_delay" value="5.0"/>
+  </node>
+
+  <!-- Launch the thrust_calculator node to publish rotor velocities -->
+  <!-- <node name="manual_control" pkg="my_drone_model" type="manual_control.py" output="screen"/> -->
+</launch>
+
+<!-- <launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <param name="robot_description" command="$(find xacro)/xacro $(find my_drone_model)/urdf/my_drone.xacro"/>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="50.0"/>
+    <param name="robot_description" value="robot_description"/>
+  </node>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model my_drone -x 1.0 -y 1.0 -z 1.0" output="screen">
+    <param name="wait_for_service" value="/gazebo/spawn_urdf_model"/>
+  </node>
+
+  <rosparam file="$(find my_drone_model)/config/controller.yaml" command="load" ns="/quadrotor"/>
+
+  <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        ns="/quadrotor"
+        args="joint_state_controller rotor1_velocity_controller rotor2_velocity_controller rotor3_velocity_controller rotor4_velocity_controller"/>
+
+  <node name="thrust_calculator" pkg="my_drone_model" type="thrust_calculator.py" output="screen"/>
+
+</launch> -->

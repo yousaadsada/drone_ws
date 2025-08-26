@@ -1,0 +1,16 @@
+<launch>
+  <!-- Load robot description -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find my_drone_model)/urdf/my_drone.xacro'" />
+
+  <!-- Launch Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+  <!-- Spawn robot in Gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model quadrotor" />
+
+  <!-- Load controllers -->
+  <rosparam file="$(find my_drone_model)/config/controller.yaml" command="load" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="joint_state_controller rotor1_velocity_controller rotor2_velocity_controller rotor3_velocity_controller rotor4_velocity_controller" />
+</launch>

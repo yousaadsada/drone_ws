@@ -1,0 +1,43 @@
+<robot name="ball">  
+  <link name="ball">
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.00001" iyy="0.00001" izz="0.00001" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.04"/> <!-- 5 cm radius sphere -->
+      </geometry>
+      <material name="Green"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.018 0.018 0.018"/>
+      </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <soft_cfm>0.01</soft_cfm>
+            <soft_erp>0.2</soft_erp>
+            <kp>1e6</kp>
+            <kd>1e3</kd>
+            <max_vel>0.01</max_vel>
+            <min_depth>0.001</min_depth>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+  </link>
+
+  <gazebo reference="ball">
+    <material>Gazebo/Red</material>
+  </gazebo>
+</robot>

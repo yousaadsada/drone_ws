@@ -1,0 +1,44 @@
+<launch>
+
+  <!-- Load the URDF to parameter server -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find my_drone_model)/urdf/quadrotor.urdf.xacro'" />
+
+  <!-- Launch Gazebo world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+
+
+  <!-- Load velocity controller configuration -->
+  <rosparam command="load" file="$(find my_drone_model)/config/quadrotor_velocity_controllers.yaml" />
+
+  <!-- Spawn joint controllers after URDF is spawned -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner"
+        args="rotor1_controller rotor2_controller rotor3_controller rotor4_controller"
+        output="screen" />
+
+  <!-- Spawn the robot in Gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model quadrotor -z 0.1"
+        output="screen" />
+    
+  <!-- <node pkg="gazebo_ros" type="spawn_model" name="spawn_jackal" output="screen"
+      args="-urdf 
+            -param robot_description 
+            -model jackal 
+            -x 2 -y 0 -z 0.1"/> -->
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+     respawn="false" output="screen">
+    <remap from="/joint_states" to="/quadrotor/joint_states" />
+  </node>
+
+  <!-- Custom motor PID controller node -->
+  <!-- <node name="motorpid" pkg="my_drone_model" type="motorpid_plugin.py" output="screen"/> -->
+  <node name="motorpid" pkg="my_drone_model" type="quadrotor_motor_controller.py" output="screen"/>
+  <!-- Custom odometry publisher node -->
+  <node name="odometry_msg" pkg="my_drone_model" type="odometry_plugin.py" output="screen"/>
+
+</launch>

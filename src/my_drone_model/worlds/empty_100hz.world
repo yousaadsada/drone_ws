@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="empty_100hz">
+
+    <!-- Basic environment -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- Physics configured for 100 Hz -->
+    <physics name="default_physics" type="ode">
+      <!-- simulation time step: 1/100 s -->
+      <max_step_size>0.001</max_step_size>
+      <!-- real‑time update rate: 100 steps per second -->
+      <real_time_update_rate>1000</real_time_update_rate>
+      <!-- optional: real_time_factor to slow/speed sim -->
+      <!-- <real_time_factor>1.0</real_time_factor> -->
+    </physics>
+
+    <!-- Optional: set gravity vector (defaults to 0 0 -9.8) -->
+    <!--
+    <gravity>0 0 -9.8</gravity>
+    -->
+
+  </world>
+</sdf>

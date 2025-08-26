@@ -1,0 +1,624 @@
+<?xml version="1.0" ?>
+<robot name="quadrotor">
+  <gazebo reference="base">
+    <material>Gazebo/GrassFloor</material>
+  </gazebo>
+
+
+
+  <link name="link">
+    <inertial>
+      <mass value="1"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.005" ixy="0.0" ixz="0.0" iyy="0.005" iyz="0.0" izz="0.009"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.06"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.2 0.2 0.06"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="link">
+    <material>Gazebo/GrassFloor</material>
+  </gazebo>
+
+
+
+
+  <!-- Leg link -->
+  <link name="leg_1">
+    <inertial>
+      <mass value="0.005"/> 
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+      <material name="Grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="leg_2">
+    <inertial>
+      <mass value="0.005"/> 
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/> 
+      </geometry>
+      <material name="Grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="leg_3">
+    <inertial>
+      <mass value="0.005"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/> 
+      </geometry>
+      <material name="Grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="leg_4">
+    <inertial>
+      <mass value="0.005"/> 
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/> 
+      </geometry>
+      <material name="Grey"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="leg_1_joint" type="fixed">
+    <parent link="link"/>
+    <child link="leg_1"/>
+    <origin xyz="0.1 0.1 -0.05" rpy="0 0 0"/> 
+  </joint>
+
+  <joint name="leg_2_joint" type="fixed">
+    <parent link="link"/>
+    <child link="leg_2"/>
+    <origin xyz="0.1 -0.1 -0.05" rpy="0 0 0"/> 
+  </joint>
+
+  <joint name="leg_3_joint" type="fixed">
+    <parent link="link"/>
+    <child link="leg_3"/>
+    <origin xyz="-0.1 0.1 -0.05" rpy="0 0 0"/> 
+  </joint>
+
+  <joint name="leg_4_joint" type="fixed">
+    <parent link="link"/>
+    <child link="leg_4"/>
+    <origin xyz="-0.1 -0.1 -0.05" rpy="0 0 0"/> 
+  </joint>
+
+  
+  <gazebo>
+    <plugin name="gazebo_ros_force" filename="libgazebo_ros_force.so">
+        <alwaysOn>true</alwaysOn>
+        <update>100</update>
+        <updateRate>100.0</updateRate>
+        <bodyName>link</bodyName>
+        <topicName>force</topicName>
+    </plugin>
+  </gazebo>
+
+
+
+
+
+  <link name="camera_link">
+    <inertial>
+      <mass value="1e-7"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-7" ixy="0" ixz="0" iyy="1e-7" iyz="0" izz="1e-7"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="camera_pitch_joint" type="revolute">
+    <parent link="link"/>  
+    <child link="camera_link"/>
+    <origin xyz="0.1 0 0" rpy="0 0 0"/> 
+    <axis xyz="0 1 0"/>  
+    <limit lower="${-3.5}" upper="${3.5}" effort="0.5" velocity="1.0"/>
+  </joint>
+
+  <transmission name="camera_pitch_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="camera_pitch_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="camera_pitch_motor">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+
+  <link name="propeller_1">
+    <inertial>
+      <mass value="0.0000001"/> <!-- Tiny mass -->
+      <inertia ixx="1e-10" ixy="0" ixz="0" iyy="1e-10" iyz="0" izz="1e-10"/>
+      <origin xyz="0 0 0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/> <!-- Thin propeller for visual -->
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="propeller_1">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <link name="propeller_2">
+    <inertial>
+      <mass value="0.0000001"/> <!-- Tiny mass -->
+      <inertia ixx="1e-10" ixy="0" ixz="0" iyy="1e-10" iyz="0" izz="1e-10"/>
+      <origin xyz="0 0 0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="propeller_2">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <link name="propeller_3">
+    <inertial>
+      <mass value="0.0000001"/> <!-- Tiny mass -->
+      <inertia ixx="1e-10" ixy="0" ixz="0" iyy="1e-10" iyz="0" izz="1e-10"/>
+      <origin xyz="0 0 0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="propeller_3">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <link name="propeller_4">
+    <inertial>
+      <mass value="0.0000001"/> <!-- Tiny mass -->
+      <inertia ixx="1e-10" ixy="0" ixz="0" iyy="1e-10" iyz="0" izz="1e-10"/>
+      <origin xyz="0 0 0"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="propeller_4">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/quadrotor</robotNamespace>
+    </plugin>
+  </gazebo>
+
+  <!-- Joints to connect propellers to the base link -->
+  <joint name="propeller_1_joint" type="revolute">
+    <parent link="link"/>
+    <child link="propeller_1"/>
+    <origin xyz="0.1 0.1 0.03" rpy="0 0 0"/> <!-- Top-left corner -->
+    <axis xyz="0 0 1"/> <!-- Spin around z-axis -->
+    <limit lower="-1e9" upper="1e9" effort="0.0001" velocity="200"/>
+    <gazebo>
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+  </joint>
+
+  <joint name="propeller_2_joint" type="revolute">
+    <parent link="link"/>
+    <child link="propeller_2"/>
+    <origin xyz="0.1 -0.1 0.03" rpy="0 0 0"/> <!-- Top-right corner -->
+    <axis xyz="0 0 1"/>
+    <limit lower="-1e9" upper="1e9" effort="0.0001" velocity="200"/>
+    <gazebo>
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+  </joint>
+
+  <joint name="propeller_3_joint" type="revolute">
+    <parent link="link"/>
+    <child link="propeller_3"/>
+    <origin xyz="-0.1 0.1 0.03" rpy="0 0 0"/> <!-- Bottom-left corner -->
+    <axis xyz="0 0 1"/>
+    <limit lower="-1e9" upper="1e9" effort="0.0001" velocity="200"/>
+    <gazebo>
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+  </joint>
+
+  <joint name="propeller_4_joint" type="revolute">
+    <parent link="link"/>
+    <child link="propeller_4"/>
+    <origin xyz="-0.1 -0.1 0.03" rpy="0 0 0"/> <!-- Bottom-right corner -->
+    <axis xyz="0 0 1"/>
+    <limit lower="-1e9" upper="1e9" effort="0.0001" velocity="200"/>
+    <gazebo>
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+  </joint>
+
+  <transmission name="propeller_1_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="propeller_1_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="propeller_1_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="propeller_2_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="propeller_2_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="propeller_2_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="propeller_3_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="propeller_3_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="propeller_3_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="propeller_4_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="propeller_4_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="propeller_4_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="front_camera">
+      <pose>0 0 0 0 0 0</pose>
+      <camera>
+        <horizontal_fov>1.396</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>100</far>
+        </clip>
+      </camera>
+      <always_on>true</always_on>
+      <update_rate>30</update_rate>
+      <visualize>true</visualize>
+
+   
+      <plugin name="camera_plugin" filename="libgazebo_ros_camera.so">
+        <robotNamespace>/</robotNamespace>
+        <cameraName>front_camera</cameraName>
+        <frameName>camera_link</frameName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <updateRate>30.0</updateRate>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+
+
+  <link name="gripper_base">
+    <visual>
+      <geometry><box size="0.1 0.1 0.01"/></geometry>
+      <material name="Grey"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.1 0.1 0.01"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="1e-7"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-7" iyy="1e-7" izz="1e-7" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  <gazebo reference="gripper_base">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <!-- Left Finger -->
+  <link name="left_finger">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.02 0.04 0.04"/></geometry>
+      <material name="Blue"/>
+    </visual>
+    
+    <visual>
+      <origin xyz="0.015 0.0 -0.015"/>
+      <geometry><box size="0.01 0.04 0.01"/></geometry>
+      <material name="Blue"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.02 0.04 0.04"/></geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <soft_cfm>0.00001</soft_cfm>
+            <soft_erp>0.2</soft_erp>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+    <collision>
+      <origin xyz="0.015 0.0 -0.015"/>
+      <geometry><box size="0.01 0.04 0.01"/></geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <soft_cfm>0.0</soft_cfm>
+            <soft_erp>0.8</soft_erp>
+            <kp>1e6</kp>
+            <kd>1e3</kd>
+            <max_vel>0.01</max_vel>
+            <min_depth>0.001</min_depth>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-7" iyy="1e-7" izz="1e-7" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  <gazebo reference="left_finger">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <!-- Right Finger -->
+  <link name="right_finger">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.02 0.04 0.04"/></geometry>
+      <material name="Red"/>
+    </visual>
+    <visual>
+      <origin xyz="-0.015 0.0 -0.015"/>
+      <geometry><box size="0.01 0.04 0.01"/></geometry>
+      <material name="Blue"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.02 0.04 0.04"/></geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <soft_cfm>0.00001</soft_cfm>
+            <soft_erp>0.2</soft_erp>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+    <collision>
+      <origin xyz="-0.015 0.0 -0.015"/>
+      <geometry><box size="0.01 0.04 0.01"/></geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>1.0</mu>
+            <mu2>1.0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <soft_cfm>0.0</soft_cfm>
+            <soft_erp>0.8</soft_erp>
+            <kp>1e6</kp>
+            <kd>1e3</kd>
+            <max_vel>0.01</max_vel>
+            <min_depth>0.001</min_depth>
+          </ode>
+        </contact>
+      </surface>
+    </collision>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-7" iyy="1e-7" izz="1e-7" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  <gazebo reference="right_finger">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <joint name="gripper_joint" type="fixed">
+    <parent link="link"/>
+    <child link="gripper_base"/>
+    <origin xyz="0.0 0 -0.035" rpy="0 0 0"/> 
+  </joint>
+
+  <!-- Prismatic Joint: left finger -->
+  <joint name="left_slide_joint" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="left_finger"/>
+    <origin xyz="-0.02 0 -0.015" rpy="0 0 0"/>
+    <axis xyz="-1 0 0"/>
+    <limit lower="-0.01" upper="0.03" effort="50" velocity="0.5"/>
+    <gazebo>
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+  </joint>
+
+  <!-- Prismatic Joint: right finger -->
+  <joint name="right_slide_joint" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="right_finger"/>
+    <origin xyz="0.02 0 -0.015" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.01" upper="0.03" effort="50" velocity="0.5"/>
+    <gazebo>
+      <provideFeedback>true</provideFeedback>
+    </gazebo>
+  </joint>
+
+  <transmission name="left_finger_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_slide_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_finger_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Right Finger Transmission -->
+  <transmission name="right_finger_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_slide_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_finger_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+</robot>

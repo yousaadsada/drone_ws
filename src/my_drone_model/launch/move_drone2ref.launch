@@ -1,0 +1,64 @@
+<!-- launch/test.launch -->
+<launch>
+  <!-- Quadrotor URDF -->
+  <param name="quadrotor/robot_description"
+         command="$(find xacro)/xacro '$(find my_drone_model)/urdf/quadrotor.urdf'"/>
+
+  <!-- Launch Gazebo with your 100 Hz world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+  </include>
+
+
+  <!-- Spawn Quadrotor -->
+  <node name="spawn_quad" pkg="gazebo_ros" type="spawn_model" output="screen" 
+        args="-param quadrotor/robot_description -urdf -model quadrotor -z 1.0"/>
+
+
+  <node pkg="topic_tools" type="throttle" name="throttle_link_states"
+        args="messages /gazebo/link_states 100.0 /gazebo/link_states_throttled"/>
+
+                  
+  <node name="camera_pitch_controller" pkg="my_drone_model"
+        type="camera_pitch_controller.py" output="screen"/>
+
+
+  <!-- Spawn Jackal -->
+  <arg name="front_laser" default="false" />
+  <arg name="default_config" value="front_laser" if="$(arg front_laser)" />
+  <arg name="default_config" value="base" unless="$(arg front_laser)" />
+
+  <arg name="config" default="$(arg default_config)" />
+
+  <arg name="joystick" default="true" />
+
+  <include file="$(find jackal_gazebo)/launch/spawn_jackal.launch">
+    <arg name="x" value="2" />
+    <arg name="y" value="0" />
+    <arg name="z" value="1.0" />
+    <arg name="yaw" value="0" />
+    <arg name="config" value="$(arg config)" />
+    <arg name="joystick" value="$(arg joystick)" />
+  </include>
+
+  <rosparam file="$(find my_drone_model)/config/propeller_controller.yaml" command="load"/>
+
+  <node name="quadrotor_controller_spawner" pkg="controller_manager" type="spawner" ns="quadrotor"
+        args="quadrotor_propeller_1_joint_velocity_controller
+              quadrotor_propeller_2_joint_velocity_controller
+              quadrotor_propeller_3_joint_velocity_controller
+              quadrotor_propeller_4_joint_velocity_controller
+              quadrotor_camera_pitch_controller"
+        output="screen"/>
+
+  <node name="move2ref" pkg="my_drone_model"
+        type="move2ref.py" output="screen"/>
+
+  <node name="quadrotor_wrench_control" pkg="my_drone_model"
+        type="quadrotor_wrench_control.py" output="screen"/> 
+ 
+
+</launch>
+

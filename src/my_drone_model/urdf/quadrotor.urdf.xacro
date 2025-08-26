@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="quadrotor">
+
+  <xacro:property name="frame_radius" value="0.1"/>
+  <xacro:property name="frame_height" value="0.025"/>
+  <xacro:property name="frame_mass" value="1.0"/>
+  <xacro:property name="arm_radius" value="0.0125"/>
+  <xacro:property name="arm_length" value="0.1"/>
+  <xacro:property name="arm_mass" value="0.0"/>
+  <xacro:property name="propeller_radius" value="0.075"/>
+  <xacro:property name="propeller_height" value="0.01"/>
+  <xacro:property name="propeller_mass" value="0.0"/>
+
+
+  <link name="frame">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${frame_radius}" length = "${frame_height}"/>
+      </geometry>
+      <material name="frame_material">
+        <color rgba="0.8 0.8 0.8 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${frame_radius}" length = "${frame_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00682" ixy="0.0" ixz="0.0" iyy="0.00682" iyz="0.0" izz="0.01335"/>
+    </inertial>
+  </link>
+
+  <xacro:macro name="propeller" params="i mat">
+    <link name="propeller${i}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${propeller_radius}" length="${propeller_height}"/>
+        </geometry>
+        <material name="${mat}"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${propeller_radius}" length="${propeller_height}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.01"/>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <inertia ixx="0.0000140625" ixy="0.0" ixz="0.0" iyy="0.0000140625" iyz="0.0" izz="0.000028125"/>
+      </inertial>
+    </link>
+
+    <joint name="rotor${i}" type="continuous">
+      <parent link="frame"/>
+      <child link="propeller${i}"/>
+      <origin xyz="${cos((-i+1)*pi/2)*(frame_radius+arm_length)}
+                   ${sin((-i+1)*pi/2)*(frame_radius+arm_length)} 0.016826923076923"
+              rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="10.0" velocity="100.0"/>
+    </joint>
+
+    <transmission name="transmission_propeller${i}">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="rotor${i}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${i}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <gazebo reference="propeller${i}">
+      <material>Gazebo/CarbonFiber</material>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:propeller i="1" mat="propeller_material"/>
+  <xacro:propeller i="2" mat="propeller_material"/>
+  <xacro:propeller i="3" mat="propeller_material"/>
+  <xacro:propeller i="4" mat="propeller_material"/>
+
+  <material name="propeller_material">
+    <color rgba="0.2 0.2 0.2 1.0"/> <!-- Dark color to match carbon fiber -->
+  </material>
+
+  <gazebo reference="frame">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <gazebo reference="frame">
+    <plugin name="p3d_plugin" filename="libgazebo_ros_p3d.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>1000.0</updateRate>
+      <bodyName>frame</bodyName>
+      <topicName>odometry</topicName>
+      <frameName>map</frameName>
+      <xyzOffset>0 0 0</xyzOffset>
+      <rpyOffset>0 0 0</rpyOffset>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/quadrotor</robotNamespace>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="quadrotor_wrench_plugin" filename="libwrench_plugin.so"/>
+  </gazebo>
+ 
+</robot>

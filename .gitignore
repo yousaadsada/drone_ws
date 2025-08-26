@@ -1,0 +1,9 @@
+# ROS build files
+build/
+devel/
+install/
+log/
+.bashrc
+*.swp
+*.pyc
+__pycache__/

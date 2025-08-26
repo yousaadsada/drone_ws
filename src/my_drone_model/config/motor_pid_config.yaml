@@ -1,0 +1,11 @@
+rotor1_controller:
+  pid: {p: 0.15, i: 0.01, d: 0.001}
+
+rotor2_controller:
+  pid: {p: 0.15, i: 0.01, d: 0.001}
+
+rotor3_controller:
+  pid: {p: 0.15, i: 0.01, d: 0.001}
+
+rotor4_controller:
+  pid: {p: 0.15, i: 0.01, d: 0.001}
