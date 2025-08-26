@@ -37,50 +37,27 @@ This project employs Gazebo to simulate precise payload drops from a quadrotor, 
 ### Clone Repository
 
 ```bash
-git clone https://github.com/zjiang11/anafi_ws.git
+git clone https://github.com/yousaadsada/drone_ws.git
 ```
-
 
 ## Usage
 
 ### Build Program
 
 ```bash
-cd ~/anafi_ws
-colcon build
-source install/setup.bash
+cd ~/drone_ws
+catkin_make
+source devel/setup.bash
 ```
 
-### Derive the Quaternions for Representing Pose
-The following code use /tf topic with high frequency (above 100Hz) to subscribe ros2 message of 'TFMessage' for the pursuing drone (Anafi) and target drone (Bebop1).
-One way to accquire the TFMessage for both drones is to use Vicon System in Martin Barczyk's lab, (211, Mechenical Engineering Building, University of Alberta). The detail of setting up the Vicon system can be refered to https://gitlab.com/barczyk-mechatronic-systems-lab/anafi_ros2/-/tree/joshua?ref_type=heads
 
-### Manual Control
+### Tracking trajectory through MPC
 
 ```bash
-ros2 run anafi_test manual_control.py
+roslaunch my_drone_model tracking_trajectory.launch
 ```
-Notice: 
 
-key.right: Take off
-
-key.left: Landing
-
-w: X Direction (Forward)
-
-s: X Direction (Backward)
-
-a: Y Direction (Left)
-
-d: Y Direction (Right)
-
-r: Z Direction (Upward)
-
-f: Z Direction (Downward)
-
-c: Yaw Direction (Anticlockwsie)
-
-x: Yaw Direction (Clockwise)
+trash:///tracking_trajectory/drone_trajectory_2.0_2.0.png
 
 
 ### Test Anafi Drone System state
